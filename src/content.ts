@@ -32,9 +32,13 @@ export const PROJECTS: Project[] = [
     name: 'Verto',
     status: 'pilot',
     stack: ['TypeScript', 'Next.js', 'Hono', 'PostgreSQL', 'RLS'],
+    link: {
+      href: 'https://github.com/ezekaj/verto-erp',
+      label: { en: 'Case study', sq: 'Rasti studimor' },
+    },
     summary: {
-      en: 'The business system I build for Albanian companies, growing from a CRM into a full ERP: double-entry ledger, VAT, inventory, HR and payroll, POS and fiscalization, all in Albanian. First deployment runs on-premises at a hospitality business as a pilot.',
-      sq: 'Sistemi i biznesit që ndërtoj për kompanitë shqiptare, nga CRM deri në ERP të plotë: kontabilitet me hyrje të dyfishtë, TVSH, inventar, burime njerëzore dhe paga, POS dhe fiskalizim, gjithçka në shqip. Instalimi i parë punon në vend, te një biznes mikpritjeje, si pilot.',
+      en: 'The business system I build for Albanian companies, growing from a CRM into a full ERP: double-entry ledger, VAT, inventory, HR and payroll, POS and fiscalization (in sandbox testing), all in Albanian. First deployment runs on-premises at a hospitality business as a pilot.',
+      sq: 'Sistemi i biznesit që ndërtoj për kompanitë shqiptare, nga CRM deri në ERP të plotë: kontabilitet me hyrje të dyfishtë, TVSH, inventar, burime njerëzore dhe paga, POS dhe fiskalizim (në testim), gjithçka në shqip. Instalimi i parë punon në vend, te një biznes mikpritjeje, si pilot.',
     },
   },
   {
