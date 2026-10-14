@@ -37,8 +37,8 @@ export const PROJECTS: Project[] = [
       label: { en: 'Case study', sq: 'Rasti studimor' },
     },
     summary: {
-      en: 'The business system I build for Albanian companies, growing from a CRM into a full ERP: double-entry ledger, VAT, inventory, HR and payroll, POS and fiscalization (in sandbox testing), all in Albanian. First deployment runs on-premises at a hospitality business as a pilot.',
-      sq: 'Sistemi i biznesit që ndërtoj për kompanitë shqiptare, nga CRM deri në ERP të plotë: kontabilitet me hyrje të dyfishtë, TVSH, inventar, burime njerëzore dhe paga, POS dhe fiskalizim (në testim), gjithçka në shqip. Instalimi i parë punon në vend, te një biznes mikpritjeje, si pilot.',
+      en: 'The business system I build for Albanian companies, growing from a CRM into a full ERP: double-entry ledger, VAT, inventory, HR and payroll, POS and fiscalization (in sandbox testing), all in Albanian. It was piloted on-site at a hospitality business in 2026.',
+      sq: 'Sistemi i biznesit që ndërtoj për kompanitë shqiptare, nga CRM deri në ERP të plotë: kontabilitet me hyrje të dyfishtë, TVSH, inventar, burime njerëzore dhe paga, POS dhe fiskalizim (në testim), gjithçka në shqip. U pilotua në vend, te një biznes mikpritjeje, në vitin 2026.',
     },
   },
   {
@@ -189,7 +189,7 @@ const en: Dict = {
   'work.sub': 'Real projects, with their honest status.',
   'status.live': 'Live',
   'status.in-use': 'In use',
-  'status.pilot': 'Pilot',
+  'status.pilot': 'Pilot completed',
   'status.read-only': 'In use, read-only',
   'status.on-hold': 'Built & tested · pilot on hold',
   'work.private': 'Code is private (client work)',
@@ -266,7 +266,7 @@ const sq: Dict = {
   'work.sub': 'Projekte reale, me statusin e tyre të vërtetë.',
   'status.live': 'Aktiv',
   'status.in-use': 'Në përdorim',
-  'status.pilot': 'Pilot',
+  'status.pilot': 'Pilot i përfunduar',
   'status.read-only': 'Në përdorim, vetëm lexim',
   'status.on-hold': 'I ndërtuar e testuar · piloti i pezulluar',
   'work.private': 'Kodi është privat (punë për klientë)',
