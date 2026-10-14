@@ -1,239 +1,60 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Elvi Zekaj — AI/ML & Backend Engineer</title>
-<meta name="description" content="AI/ML and backend engineer. I run a 2-node NVIDIA DGX Blackwell cluster serving an 80B-parameter model on vLLM, and build the products on top of it.">
-<style>
-  :root{
-    --bg:#ffffff; --fg:#0f1420; --muted:#5b6577; --faint:#8b94a5;
-    --accent:#2563eb; --rule:#e5e9f0; --card:#f8fafc;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{ --bg:#0b0f17; --fg:#e8ecf3; --muted:#9aa5b8; --faint:#6b768a;
-           --accent:#6096ff; --rule:#1e2634; --card:#121826; }
-  }
-  :root[data-theme="dark"]{ --bg:#0b0f17; --fg:#e8ecf3; --muted:#9aa5b8; --faint:#6b768a;
-           --accent:#6096ff; --rule:#1e2634; --card:#121826; }
-  :root[data-theme="light"]{ --bg:#ffffff; --fg:#0f1420; --muted:#5b6577; --faint:#8b94a5;
-           --accent:#2563eb; --rule:#e5e9f0; --card:#f8fafc; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Elvi Zekaj — Founder &amp; AI Engineer</title>
+    <meta name="description" content="Elvi Zekaj, founder of Z.E Digital Tech and forward-deployed AI engineer in Tirana. I build AI and automation into real businesses and operate it: Verto, an AI ads system, Fanar, self-hosted inference and open source." />
+    <meta name="author" content="Elvi Zekaj" />
+    <meta name="theme-color" content="#030303" />
+    <link rel="canonical" href="https://ezekaj.github.io/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" href="/fonts/syncopate-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono-variable.woff2" as="font" type="font/woff2" crossorigin />
 
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--bg); color:var(--fg);
-    font:16px/1.65 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:780px;margin:0 auto;padding:0 24px}
-  a{color:var(--accent);text-decoration:none}
-  a:hover{text-decoration:underline}
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="Elvi Zekaj" />
+    <meta property="og:title" content="Elvi Zekaj — Founder &amp; AI Engineer" />
+    <meta property="og:description" content="Founder of Z.E Digital Tech. I build AI and automation into real businesses, then stay and operate it." />
+    <meta property="og:url" content="https://ezekaj.github.io/" />
+    <meta property="og:image" content="https://ezekaj.github.io/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="profile:first_name" content="Elvi" />
+    <meta property="profile:last_name" content="Zekaj" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Elvi Zekaj — Founder &amp; AI Engineer" />
+    <meta name="twitter:description" content="Founder of Z.E Digital Tech. I build AI and automation into real businesses, then stay and operate it." />
+    <meta name="twitter:image" content="https://ezekaj.github.io/og.png" />
 
-  header{padding:88px 0 56px}
-  h1{font-size:clamp(2.1rem,6vw,3rem);line-height:1.1;letter-spacing:-.03em;font-weight:750}
-  .tagline{color:var(--accent);font-weight:650;font-size:1.05rem;margin-top:10px}
-  .lede{color:var(--muted);font-size:1.12rem;margin-top:20px;max-width:62ch}
-  .lede strong{color:var(--fg);font-weight:650}
-  .links{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
-  .links a{
-    border:1px solid var(--rule);padding:8px 15px;border-radius:8px;
-    font-size:.9rem;font-weight:600;color:var(--fg);transition:.15s;
-  }
-  .links a:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
-  .links a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-  .links a.primary:hover{opacity:.88;color:#fff}
-
-  section{padding:44px 0;border-top:1px solid var(--rule)}
-  h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.13em;color:var(--faint);
-     font-weight:700;margin-bottom:26px}
-
-  .item{margin-bottom:34px}
-  .item:last-child{margin-bottom:0}
-  .item h3{font-size:1.16rem;font-weight:700;letter-spacing:-.01em}
-  .item .meta{color:var(--faint);font-size:.84rem;margin-top:3px;font-variant-numeric:tabular-nums}
-  .item p{color:var(--muted);margin-top:9px}
-  .tags{margin-top:11px;display:flex;flex-wrap:wrap;gap:6px}
-  .tags span{
-    background:var(--card);border:1px solid var(--rule);color:var(--muted);
-    font-size:.76rem;padding:3px 9px;border-radius:5px;font-weight:500;
-  }
-
-  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:18px;margin-top:4px}
-  .fact{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:17px}
-  .fact b{display:block;font-size:1.5rem;font-weight:750;letter-spacing:-.02em}
-  .fact span{color:var(--muted);font-size:.85rem;display:block;margin-top:2px}
-
-  .stack{display:grid;grid-template-columns:104px 1fr;gap:9px 18px;font-size:.93rem}
-  .stack dt{font-weight:700}
-  .stack dd{color:var(--muted)}
-
-  footer{padding:44px 0 72px;border-top:1px solid var(--rule);color:var(--muted);font-size:.92rem}
-  footer .row{display:flex;flex-wrap:wrap;gap:8px 20px;margin-bottom:14px}
-
-  #theme{
-    position:fixed;top:16px;right:16px;background:var(--card);border:1px solid var(--rule);
-    color:var(--muted);border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:15px;
-  }
-  #theme:hover{color:var(--accent);border-color:var(--accent)}
-
-  @media (max-width:560px){
-    header{padding:60px 0 40px}
-    .stack{grid-template-columns:1fr;gap:2px 0}
-    .stack dd{margin-bottom:10px}
-  }
-</style>
-</head>
-<body>
-
-<button id="theme" aria-label="Toggle colour theme">◐</button>
-
-<div class="wrap">
-
-<header>
-  <h1>Elvi Zekaj</h1>
-  <div class="tagline">AI/ML &amp; Backend Engineer</div>
-  <p class="lede">
-    I run a <strong>2-node NVIDIA DGX Blackwell cluster</strong> serving an
-    80-billion-parameter model on vLLM, and I build the products that sit on top of it.
-    From CUDA and RDMA up to React — usually what small AI teams actually need.
-  </p>
-  <div class="links">
-    <a class="primary" href="mailto:elvizekaj@zedigital.tech">Email me</a>
-    <a href="https://github.com/ezekaj">GitHub</a>
-    <!-- LinkedIn: paste your real profile URL and uncomment. I couldn't verify the
-         handle (LinkedIn blocks automated checks), and a 404 on this button is worse
-         than no button.
-    <a href="https://www.linkedin.com/in/YOUR-HANDLE">LinkedIn</a>
-    -->
-    <a href="Elvi_Zekaj_CV.pdf">Download CV</a>
-  </div>
-</header>
-
-<section>
-  <h2>At a glance</h2>
-  <div class="facts">
-    <div class="fact"><b>80B</b><span>parameter model self-hosted on vLLM</span></div>
-    <div class="fact"><b>18+</b><span>production systems delivered</span></div>
-    <div class="fact"><b>4,300+</b><span>GitHub contributions last year</span></div>
-    <div class="fact"><b>24/7</b><span>voice AI answering live calls</span></div>
-  </div>
-</section>
-
-<section>
-  <h2>Selected work</h2>
-
-  <div class="item">
-    <h3>Self-hosted LLM inference cluster</h3>
-    <div class="meta">2 × NVIDIA DGX GB10 (Blackwell) · 256 GB unified memory</div>
-    <p>
-      Built and operate the whole stack: vLLM serving Qwen3-Coder-Next-FP8, an 80B
-      mixture-of-experts model, at ~57 tok/s. Dual ConnectX-7 200 Gbps RoCE RDMA
-      interconnect, Ray for distribution, Tailscale mesh networking, systemd
-      orchestration. It runs the coding, document and analysis pipelines behind
-      everything else here — at zero cloud inference spend.
-    </p>
-    <div class="tags"><span>vLLM</span><span>CUDA</span><span>Ray</span><span>RDMA</span><span>Docker</span><span>systemd</span></div>
-  </div>
-
-  <div class="item">
-    <h3>Sofia — voice AI receptionist</h3>
-    <div class="meta">Live in production · German · SIP telephony</div>
-    <p>
-      A voice agent that answers real hotel phone calls, 24 hours a day, in German,
-      over a SIP trunk. Sub-second turn-taking with a custom voice-activity detector
-      I wrote from scratch — the hard part of voice AI isn't the model, it's knowing
-      when the human has actually stopped speaking.
-    </p>
-    <div class="tags"><span>Python</span><span>LiveKit</span><span>Twilio</span><span>Deepgram</span><span>WebRTC</span></div>
-  </div>
-
-  <div class="item">
-    <h3>Quantitative trading research platform</h3>
-    <div class="meta">~23,000 lines of Python · 435 automated tests</div>
-    <p>
-      A system built to be trusted rather than to look good. The data layer makes
-      look-ahead bias structurally impossible — forward windows return nothing rather
-      than cross a session boundary. Pre-registered hypotheses committed to git before
-      each test runs, so results can't be reinterpreted afterwards. 84 mutation tests
-      prove the test suite actually detects sabotage. Circuit breakers and a
-      17-switch safety layer, deployed unattended against a live broker API.
-    </p>
-    <div class="tags"><span>Python</span><span>NumPy</span><span>pandas</span><span>SQLite</span><span>statistics</span></div>
-  </div>
-
-  <div class="item">
-    <h3>ELO-AGI — cognitive architecture research</h3>
-    <div class="meta">Open source · 350 commits · 200k+ lines</div>
-    <p>
-      A neuroscience-inspired cognitive framework: 38 modules across four reasoning
-      tiers, combining Global Workspace theory, predictive coding and dual-process
-      reasoning, with continual learning via EWC and PackNet. Runs entirely offline.
-    </p>
-    <div class="tags"><span>Python</span><span>EWC</span><span>PackNet</span><span>local-first</span></div>
-  </div>
-
-  <div class="item">
-    <h3>Client products</h3>
-    <div class="meta">UK · Austria · Germany · Albania</div>
-    <p>
-      <strong>Zeo Dental</strong> — clinic platform with an AI chatbot handling 70% of
-      inquiries, delivered in four weeks. <strong>Mobial</strong> — multi-tenant eSIM
-      SaaS with Stripe billing, i18n and a React Native app.
-      <strong>Verto</strong> — CRM/ERP across ten industry verticals on production VPS.
-    </p>
-    <div class="tags"><span>TypeScript</span><span>React</span><span>Next.js</span><span>PostgreSQL</span><span>Stripe</span><span>nginx</span></div>
-  </div>
-</section>
-
-<section>
-  <h2>Stack</h2>
-  <dl class="stack">
-    <dt>Languages</dt><dd>Python, TypeScript/JavaScript, C, C++, Go, Rust, SQL, Bash</dd>
-    <dt>AI / ML</dt><dd>vLLM, quantisation (FP8, MoE), RAG, FAISS, Pinecone, agent architectures, evaluation harnesses</dd>
-    <dt>Infra</dt><dd>NVIDIA DGX/CUDA, Docker, Kubernetes, Ray, systemd, nginx, RDMA, Tailscale, CI/CD</dd>
-    <dt>Backend</dt><dd>FastAPI, Node.js, Fastify, Bun, PostgreSQL, Prisma, SQLite, Stripe, Twilio/SIP</dd>
-    <dt>Frontend</dt><dd>React, React Native, Next.js, i18n, Tailwind</dd>
-  </dl>
-</section>
-
-<section>
-  <h2>About</h2>
-  <p style="color:var(--muted)">
-    Graduate of <a href="https://42heilbronn.de">42 Heilbronn</a>, the peer-to-peer
-    engineering school — C, C++, Unix systems programming, algorithms, networking.
-    Before that, infrastructure and networks at One Albania, a national telecoms operator.
-    I now run Z.E Digital Tech from Tirana.
-  </p>
-  <p style="color:var(--muted);margin-top:14px">
-    I work CET hours and contract directly, so there's no visa sponsorship or
-    relocation to arrange. Albanian native, English C2, German A2 and improving.
-  </p>
-</section>
-
-<footer>
-  <div class="row">
-    <a href="mailto:elvizekaj@zedigital.tech">elvizekaj@zedigital.tech</a>
-    <a href="https://github.com/ezekaj">github.com/ezekaj</a>
-    <a href="https://zedigital.tech">zedigital.tech</a>
-  </div>
-  <div style="color:var(--faint);font-size:.85rem">Tirana, Albania · open to remote roles and contract work</div>
-</footer>
-
-</div>
-
-<script>
-  var b = document.getElementById('theme');
-  var saved = localStorage.getItem('theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
-  b.onclick = function () {
-    var cur = document.documentElement.getAttribute('data-theme');
-    if (!cur) cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    var next = cur === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-  };
-</script>
-
-</body>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Elvi Zekaj",
+        "jobTitle": "Founder & AI Engineer",
+        "url": "https://ezekaj.github.io/",
+        "email": "mailto:elvizekaj@zedigital.tech",
+        "address": { "@type": "PostalAddress", "addressLocality": "Tirana", "addressCountry": "AL" },
+        "worksFor": { "@type": "Organization", "name": "Z.E Digital Tech", "url": "https://zedigital.tech" },
+        "alumniOf": [{ "@type": "EducationalOrganization", "name": "42 Heilbronn" }],
+        "sameAs": ["https://github.com/ezekaj", "https://www.linkedin.com/in/elvi-zekaj-240b10243", "https://zedigital.tech"]
+      }
+    </script>
+    <style>
+      html, body { background: #030303; color: #f2f2f2; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="max-width:720px;margin:0 auto;padding:48px 20px;font-family:system-ui,sans-serif;line-height:1.6">
+        <h1>Elvi Zekaj</h1>
+        <p>Founder of <a href="https://zedigital.tech" style="color:#22e6ff">Z.E Digital Tech</a> · forward-deployed AI engineer, Tirana.</p>
+        <p>I build AI and automation into real businesses, then stay and operate it.</p>
+        <p><a href="/Elvi_Zekaj_CV.pdf" style="color:#22e6ff">CV (PDF)</a> · <a href="https://github.com/ezekaj" style="color:#22e6ff">GitHub</a> · <a href="https://www.linkedin.com/in/elvi-zekaj-240b10243" style="color:#22e6ff">LinkedIn</a> · <a href="mailto:elvizekaj@zedigital.tech" style="color:#22e6ff">elvizekaj@zedigital.tech</a></p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
