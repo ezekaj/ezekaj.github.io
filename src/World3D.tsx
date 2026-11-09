@@ -6,6 +6,12 @@ const Z_GAP = 750;
 const SECTION_GAP = 1100;
 const CAM_SPEED = 2.5;
 const STAR_COUNT = 140;
+// Empty space after Contact before the world loops back to the hero.
+const LOOP_GAP = SECTION_GAP * 3;
+// Items further behind the camera than this wrap around to the far end of the loop.
+const WRAP_BEHIND = 900;
+// Scroll runway in loops; the position is folded back to the first loop when scrolling pauses.
+const RUNWAY_LOOPS = 4;
 
 type Item =
   | { kind: 'text'; key: string; z: number; x: number; y: number; textKey: string; hero: boolean }
@@ -17,6 +23,14 @@ interface Layout {
   sectionTargets: number[];
   sectionStarts: number[];
   endZ: number;
+  loopZ: number;
+}
+
+// Folds a camera-relative depth into the loop so the world repeats endlessly.
+function wrapZ(v: number, loopZ: number) {
+  let w = ((v % loopZ) + loopZ) % loopZ;
+  if (w > WRAP_BEHIND) w -= loopZ;
+  return w;
 }
 
 function seeded(seed: number) {
@@ -27,7 +41,7 @@ function seeded(seed: number) {
   };
 }
 
-function buildLayout(sections: SectionDef[], spread: number): Layout {
+function buildLayout(sections: SectionDef[], spread: number, narrow: boolean): Layout {
   const rand = seeded(42);
   const items: Item[] = [];
   const sectionTargets: number[] = [];
@@ -47,7 +61,7 @@ function buildLayout(sections: SectionDef[], spread: number): Layout {
     items.push({ kind: 'text', key: `${section.id}-text`, z, x: 0, y: 0, textKey: section.bigKey, hero: false });
     z += Z_GAP;
     sectionTargets.push(z);
-    const single = section.cards.length === 1;
+    const single = narrow || section.cards.length === 1;
     section.cards.forEach((_, cIdx) => {
       const side = cIdx % 2 === 0 ? -1 : 1;
       items.push({
@@ -66,16 +80,17 @@ function buildLayout(sections: SectionDef[], spread: number): Layout {
   });
 
   const endZ = z - Z_GAP - SECTION_GAP;
+  const loopZ = endZ + LOOP_GAP;
   for (let i = 0; i < STAR_COUNT; i++) {
     items.push({
       kind: 'star',
       key: `star-${i}`,
-      z: rand() * (endZ + 3000) - 500,
+      z: rand() * loopZ,
       x: (rand() - 0.5) * 3200,
       y: (rand() - 0.5) * 2200,
     });
   }
-  return { items, sectionTargets, sectionStarts, endZ };
+  return { items, sectionTargets, sectionStarts, endZ, loopZ };
 }
 
 export interface World3DHandle {
@@ -96,8 +111,12 @@ const World3D = forwardRef<World3DHandle, Props>(function World3D({ sections, on
   const [vh, setVh] = useState(() => window.innerHeight);
   const [hintVisible, setHintVisible] = useState(true);
 
+  // Below this width the cards are stacked down the centre instead of alternating sides.
+  const narrow = vw < 760;
   const spread = Math.min(300, Math.max(180, vw * 0.21));
-  const layout = useMemo(() => buildLayout(sections, spread), [sections, spread]);
+  const layout = useMemo(() => buildLayout(sections, spread, narrow), [sections, spread, narrow]);
+  const narrowRef = useRef(narrow);
+  narrowRef.current = narrow;
   const layoutRef = useRef(layout);
   layoutRef.current = layout;
   const onSectionChangeRef = useRef(onSectionChange);
@@ -134,6 +153,8 @@ const World3D = forwardRef<World3DHandle, Props>(function World3D({ sections, on
     let mouseX = 0;
     let mouseY = 0;
     let currentSection = -1;
+    let lastScrollY = window.scrollY;
+    let lastScrollAt = performance.now();
 
     const onMouse = (e: MouseEvent) => {
       mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -142,7 +163,22 @@ const World3D = forwardRef<World3DHandle, Props>(function World3D({ sections, on
     window.addEventListener('mousemove', onMouse, { passive: true });
 
     const frame = () => {
-      const { items, sectionStarts } = layoutRef.current;
+      const { items, sectionStarts, loopZ } = layoutRef.current;
+      const now = performance.now();
+      if (window.scrollY !== lastScrollY) {
+        lastScrollY = window.scrollY;
+        lastScrollAt = now;
+      }
+      // Fold the scroll position back into the first loop once the user pauses (or nears the
+      // end of the runway). The view is identical one loop apart, so the jump is invisible.
+      const loopPx = loopZ / CAM_SPEED;
+      const nearEnd = window.scrollY + window.innerHeight * 2 > document.documentElement.scrollHeight;
+      if (window.scrollY >= loopPx && (now - lastScrollAt > 150 || nearEnd)) {
+        const loops = Math.floor(window.scrollY / loopPx);
+        window.scrollTo({ top: window.scrollY - loops * loopPx, behavior: 'instant' });
+        cam -= loops * loopZ;
+        lastScrollY = window.scrollY;
+      }
       const target = window.scrollY * CAM_SPEED;
       const prev = cam;
       cam += (target - cam) * 0.12;
@@ -159,9 +195,10 @@ const World3D = forwardRef<World3DHandle, Props>(function World3D({ sections, on
         viewportRef.current.style.perspective = `${fov}px`;
       }
 
+      const camInLoop = ((cam % loopZ) + loopZ) % loopZ;
       let section = 0;
       for (let s = sectionStarts.length - 1; s >= 0; s--) {
-        if (cam >= sectionStarts[s] - Z_GAP * 0.5) {
+        if (camInLoop >= sectionStarts[s] - Z_GAP * 0.5) {
           section = s;
           break;
         }
@@ -174,13 +211,16 @@ const World3D = forwardRef<World3DHandle, Props>(function World3D({ sections, on
       items.forEach((item, i) => {
         const el = itemRefs.current[i];
         if (!el) return;
-        const vizZ = cam - item.z;
+        const vizZ = wrapZ(cam - item.z, loopZ);
         let alpha = 1;
         if (item.kind === 'card') {
           // Only the current card and the next one (on the other side) are visible,
           // so a card never shows through the one in front of it.
-          if (vizZ < -1400) alpha = 0;
-          else if (vizZ < -900) alpha = (vizZ + 1400) / 500;
+          // Centre-stacked cards (narrow screens) would sit right behind each other, so the
+          // next one only appears once the current one starts moving past the camera.
+          const [hideAt, fullAt] = narrowRef.current ? [-760, -420] : [-1400, -900];
+          if (vizZ < hideAt) alpha = 0;
+          else if (vizZ < fullAt) alpha = (vizZ - hideAt) / (fullAt - hideAt);
         } else if (vizZ < -2600) alpha = 0;
         else if (vizZ < -1600) alpha = (vizZ + 2600) / 1000;
         if (item.kind !== 'star' && vizZ > 150) alpha = Math.max(0, 1 - (vizZ - 150) / 450);
@@ -189,7 +229,7 @@ const World3D = forwardRef<World3DHandle, Props>(function World3D({ sections, on
         el.style.opacity = alpha.toFixed(3);
         el.style.visibility = alpha <= 0.01 ? 'hidden' : 'visible';
         if (item.kind === 'card') {
-          el.style.pointerEvents = alpha > 0.6 && vizZ > -900 ? 'auto' : 'none';
+          el.style.pointerEvents = alpha > 0.6 && vizZ > (narrowRef.current ? -420 : -900) ? 'auto' : 'none';
         }
         if (alpha <= 0.01) return;
 
@@ -252,7 +292,7 @@ const World3D = forwardRef<World3DHandle, Props>(function World3D({ sections, on
           })}
         </div>
       </div>
-      <div className="scroll-proxy" style={{ height: layout.endZ / CAM_SPEED + vh }} aria-hidden="true" />
+      <div className="scroll-proxy" style={{ height: (layout.loopZ * RUNWAY_LOOPS) / CAM_SPEED + vh }} aria-hidden="true" />
       <div className={`scroll-cue${hintVisible ? '' : ' is-hidden'}`} aria-hidden="true">
         <span className="scroll-cue-label">{t('scroll.hint')}</span>
         <span className="scroll-cue-line" />

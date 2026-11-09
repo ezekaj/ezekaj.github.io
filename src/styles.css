@@ -618,6 +618,12 @@ html[data-view='3d'] body::-webkit-scrollbar {
   max-height: calc(100vh - 120px);
   overflow: auto;
 }
+@media (max-width: 759px) {
+  .item-inner .card {
+    width: min(380px, calc(100vw - 32px));
+    max-height: calc(100svh - 150px);
+  }
+}
 .big-text {
   font-family: var(--font-display);
   font-weight: 700;
@@ -884,5 +890,12 @@ html.has-custom-cursor textarea {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* phones: the Menu button handles navigation; the side dots would cover the cards */
+@media (max-width: 759px) {
+  .dot-nav {
+    display: none;
   }
 }

@@ -16,8 +16,9 @@ function hasWebGL(): boolean {
 export function canRun3D(): boolean {
   const mq = (q: string) => window.matchMedia?.(q).matches ?? false;
   if (mq('(prefers-reduced-motion: reduce)')) return false;
-  if (window.innerWidth < 900 || window.innerHeight < 560) return false;
-  if (!mq('(pointer: fine)')) return false;
+  // Phones and tablets get the 3D world too (single-column layout); only very short
+  // viewports, such as a phone in landscape, fall back to the simple view.
+  if (window.innerHeight < 480) return false;
   if (typeof CSS === 'undefined' || !CSS.supports('transform-style', 'preserve-3d')) return false;
   if (!hasWebGL()) return false;
   const nav = navigator as Navigator & { deviceMemory?: number };
